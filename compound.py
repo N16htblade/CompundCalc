@@ -1,25 +1,25 @@
-from os import path
+import os
+import sys
 import datetime
+import csv
 
 #User register section:
 user = input("Please enter Username: ")
-x = datetime.datetime.now()
-xtime = x.strftime("%c")
-
-if path.exists('%s.txt' %user):
-    with open('%s.txt' %user, 'a+') as a:
-        a.write("%s logged in: %s\r" %(user, xtime) )
+if os.path.exists(os.path.join(sys.path[0], '%s.csv') %user):
+    print (f"Welcome back {user}, here is a new calculator:")
+    breakpoint
 else:
     usernamecheck = input("This username does not exist, would you like to create it? (Yes/No): ")
     if usernamecheck == ("Yes"):
-         with open('%s.txt' %user, 'w+') as a:
-            a.write("%s's account created: %s\r" %(user, xtime))
+         with open(os.path.join(sys.path[0], '%s.csv') %user, 'w', newline="") as csv_file:
+            writer = csv.writer(csv_file, delimiter=',')
+            writer.writerow(["date", "currentAccount", "anualContribution", "finalAccount", "year"])
     else:
         quit()
 
 # Calculator section:
 def CheckInput (testInput):
-    x = input(f"Please enter your current {testInput} value: ")
+    x = input(f"Please enter your {testInput} value: ")
     while True:
         try:
             x = int(x)
@@ -39,12 +39,12 @@ while investmentAccount < finalAccount:
     investmentAccount *= estimatedGrowth
     investmentAccount = round (investmentAccount)
     year += 1
+x = datetime.datetime.now()
+xtime = x.strftime("%c")
 
 print (f"We estimate you will reach a value of {investmentAccount} in {year} Years")
 
 #User history section:
-with open('%s.txt' %user, 'a+') as a:
-        a.write("Current Account %d\r" %currentAccount)
-        a.write("Anual Contribution %d\r" %anualContribution)
-        a.write("Final account %d\r" %finalAccount)
-        a.write("Estimated time %d\r\n" %year)
+with open(os.path.join(sys.path[0], '%s.csv') %user, 'a', newline="") as csv_file:
+    writer = csv.writer(csv_file, delimiter=",")
+    writer.writerow([xtime, currentAccount, anualContribution, finalAccount, year])
